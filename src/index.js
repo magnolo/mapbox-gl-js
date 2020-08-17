@@ -26,7 +26,7 @@ import WorkerPool from './util/worker_pool';
 import {prewarm, clearPrewarmedResources} from './util/global_worker_pool';
 import {clearTileCache} from './util/tile_request_cache';
 import {PerformanceUtils} from './util/performance';
-import {Browser} from './util/browser';
+import browser from './util/browser';
 
 const exported = {
     version,
@@ -47,7 +47,7 @@ const exported = {
     Point,
     MercatorCoordinate,
     Evented,
-    Browser,
+    browser,
     config,
     /**
      * Initializes resources like WebWorkers that can be shared across maps to lower load
