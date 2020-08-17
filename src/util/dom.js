@@ -105,9 +105,9 @@ DOM.suppressClick = function() {
 
 DOM.mousePos = function (el: HTMLElement, e: MouseEvent | window.TouchEvent | Touch) {
     const rect = el.getBoundingClientRect();
-    return new Point(
-        e.clientX - rect.left - el.clientLeft,
-        e.clientY - rect.top - el.clientTop
+     return new Point(
+        (e.clientX - rect.left - el.clientLeft) / (el._scaleRatio || 1),
+        (e.clientY - rect.top - el.clientTop) / (el._scaleRatio || 1)
     );
 };
 
@@ -115,9 +115,9 @@ DOM.touchPos = function (el: HTMLElement, touches: TouchList) {
     const rect = el.getBoundingClientRect(),
         points = [];
     for (let i = 0; i < touches.length; i++) {
-        points.push(new Point(
-            touches[i].clientX - rect.left - el.clientLeft,
-            touches[i].clientY - rect.top - el.clientTop
+         points.push(new Point(
+          (touches[i].clientX - rect.left - el.clientLeft) / (el._scaleRatio || 1),
+          (touches[i].clientY - rect.top - el.clientTop) / (el._scaleRatio || 1)
         ));
     }
     return points;
