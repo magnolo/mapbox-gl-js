@@ -124,27 +124,39 @@ DOM.suppressClick = function () {
     }, 0);
 };
 
-DOM.mousePos = function (
-    el: any,
-    e: MouseEvent | window.TouchEvent | Touch
-) {
-    const rect = el.getBoundingClientRect();
+DOM.mousePos = function (el: any, e: MouseEvent | window.TouchEvent | Touch) {
+    // const rect = el.getBoundingClientRect();
+    // return new Point(
+    //     (e.clientX - rect.left - el.clientLeft) / (el._scaleRatio || 1),
+    //     (e.clientY - rect.top - el.clientTop) / (el._scaleRatio || 1)
+    // );
+    const rect = el.getBoundingClientRect(),
+        factorX = rect.width ? el.offsetWidth / rect.width : 1,
+        factorY = rect.height ? el.offsetHeight / rect.height : 1;
+    const t =
+        window.TouchEvent && e instanceof window.TouchEvent ? e.touches[0] : e;
     return new Point(
-        (e.clientX - rect.left - el.clientLeft) / (el._scaleRatio || 1),
-        (e.clientY - rect.top - el.clientTop) / (el._scaleRatio || 1)
+        (t.clientX - rect.left) * factorX - el.clientLeft,
+        (t.clientY - rect.top) * factorY - el.clientTop
     );
 };
 
 DOM.touchPos = function (el: any, touches: TouchList) {
     const rect = el.getBoundingClientRect(),
+    factorX = rect.width ? el.offsetWidth / rect.width : 1,
+    factorY = rect.height ? el.offsetHeight / rect.height : 1,
         points = [];
     for (let i = 0; i < touches.length; i++) {
         points.push(
             new Point(
-                (touches[i].clientX - rect.left - el.clientLeft) /
-                    (el._scaleRatio || 1),
-                (touches[i].clientY - rect.top - el.clientTop) /
-                    (el._scaleRatio || 1)
+                (touches[i].clientX - rect.left) * factorX - el.clientLeft,
+                (touches[i].clientY - rect.top) * factorY - el.clientTop
+                
+
+            //     (touches[i].clientX - rect.left - el.clientLeft) /
+            //     (el._scaleRatio || 1),
+            // (touches[i].clientY - rect.top - el.clientTop) /
+            //     (el._scaleRatio || 1)
             )
         );
     }
