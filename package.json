@@ -1,5 +1,5 @@
 {
-  "name": "@twentythreedegrees/mapbox-gl-clone",
+  "name": "mapbox-gl",
   "description": "A WebGL interactive maps library",
   "version": "1.13.0",
   "main": "dist/mapbox-gl.js",
@@ -176,7 +176,7 @@
   "directories": {
     "test": "test"
   },
-  "author": "",
+  "author": "magnolo",
   "publishConfig": {
     "access": "public"
   }
