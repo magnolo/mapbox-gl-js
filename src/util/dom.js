@@ -1,14 +1,18 @@
 // @flow strict
 
-import Point from '@mapbox/point-geometry';
+import Point from "@mapbox/point-geometry";
 
-import window from './window';
-import assert from 'assert';
+import window from "./window";
+import assert from "assert";
 
 const DOM = {};
 export default DOM;
 
-DOM.create = function (tagName: string, className: ?string, container?: HTMLElement) {
+DOM.create = function (
+    tagName: string,
+    className: ?string,
+    container?: HTMLElement
+) {
     const el = window.document.createElement(tagName);
     if (className !== undefined) el.className = className;
     if (container) container.appendChild(el);
@@ -32,13 +36,18 @@ function testProp(props) {
     return props[0];
 }
 
-const selectProp = testProp(['userSelect', 'MozUserSelect', 'WebkitUserSelect', 'msUserSelect']);
+const selectProp = testProp([
+    "userSelect",
+    "MozUserSelect",
+    "WebkitUserSelect",
+    "msUserSelect",
+]);
 let userSelect;
 
 DOM.disableDrag = function () {
     if (docStyle && selectProp) {
         userSelect = docStyle[selectProp];
-        docStyle[selectProp] = 'none';
+        docStyle[selectProp] = "none";
     }
 };
 
@@ -48,9 +57,9 @@ DOM.enableDrag = function () {
     }
 };
 
-const transformProp = testProp(['transform', 'WebkitTransform']);
+const transformProp = testProp(["transform", "WebkitTransform"]);
 
-DOM.setTransform = function(el: HTMLElement, value: string) {
+DOM.setTransform = function (el: HTMLElement, value: string) {
     // https://github.com/facebook/flow/issues/7754
     // $FlowFixMe
     el.style[transformProp] = value;
@@ -63,9 +72,11 @@ try {
     // https://github.com/facebook/flow/issues/285
     // $FlowFixMe
     const options = Object.defineProperty({}, "passive", {
-        get() { // eslint-disable-line
+        get() {
+            // eslint-disable-line
             passiveSupported = true;
-        }
+            return passiveSupported;
+        },
     });
     window.addEventListener("test", options, options);
     window.removeEventListener("test", options, options);
@@ -73,16 +84,26 @@ try {
     passiveSupported = false;
 }
 
-DOM.addEventListener = function(target: *, type: *, callback: *, options: {passive?: boolean, capture?: boolean} = {}) {
-    if ('passive' in options && passiveSupported) {
+DOM.addEventListener = function (
+    target: *,
+    type: *,
+    callback: *,
+    options: { passive?: boolean, capture?: boolean } = {}
+) {
+    if ("passive" in options && passiveSupported) {
         target.addEventListener(type, callback, options);
     } else {
         target.addEventListener(type, callback, options.capture);
     }
 };
 
-DOM.removeEventListener = function(target: *, type: *, callback: *, options: {passive?: boolean, capture?: boolean} = {}) {
-    if ('passive' in options && passiveSupported) {
+DOM.removeEventListener = function (
+    target: *,
+    type: *,
+    callback: *,
+    options: { passive?: boolean, capture?: boolean } = {}
+) {
+    if ("passive" in options && passiveSupported) {
         target.removeEventListener(type, callback, options);
     } else {
         target.removeEventListener(type, callback, options.capture);
@@ -93,40 +114,51 @@ DOM.removeEventListener = function(target: *, type: *, callback: *, options: {pa
 const suppressClick: MouseEventListener = function (e) {
     e.preventDefault();
     e.stopPropagation();
-    window.removeEventListener('click', suppressClick, true);
+    window.removeEventListener("click", suppressClick, true);
 };
 
-DOM.suppressClick = function() {
-    window.addEventListener('click', suppressClick, true);
+DOM.suppressClick = function () {
+    window.addEventListener("click", suppressClick, true);
     window.setTimeout(() => {
-        window.removeEventListener('click', suppressClick, true);
+        window.removeEventListener("click", suppressClick, true);
     }, 0);
 };
 
-DOM.mousePos = function (el: HTMLElement, e: MouseEvent | window.TouchEvent | Touch) {
+DOM.mousePos = function (
+    el: any,
+    e: MouseEvent | window.TouchEvent | Touch
+) {
     const rect = el.getBoundingClientRect();
-     return new Point(
+    return new Point(
         (e.clientX - rect.left - el.clientLeft) / (el._scaleRatio || 1),
         (e.clientY - rect.top - el.clientTop) / (el._scaleRatio || 1)
     );
 };
 
-DOM.touchPos = function (el: HTMLElement, touches: TouchList) {
+DOM.touchPos = function (el: any, touches: TouchList) {
     const rect = el.getBoundingClientRect(),
         points = [];
     for (let i = 0; i < touches.length; i++) {
-         points.push(new Point(
-          (touches[i].clientX - rect.left - el.clientLeft) / (el._scaleRatio || 1),
-          (touches[i].clientY - rect.top - el.clientTop) / (el._scaleRatio || 1)
-        ));
+        points.push(
+            new Point(
+                (touches[i].clientX - rect.left - el.clientLeft) /
+                    (el._scaleRatio || 1),
+                (touches[i].clientY - rect.top - el.clientTop) /
+                    (el._scaleRatio || 1)
+            )
+        );
     }
     return points;
 };
 
 DOM.mouseButton = function (e: MouseEvent) {
-    assert(e.type === 'mousedown' || e.type === 'mouseup');
-    if (typeof window.InstallTrigger !== 'undefined' && e.button === 2 && e.ctrlKey &&
-        window.navigator.platform.toUpperCase().indexOf('MAC') >= 0) {
+    assert(e.type === "mousedown" || e.type === "mouseup");
+    if (
+        typeof window.InstallTrigger !== "undefined" &&
+        e.button === 2 &&
+        e.ctrlKey &&
+        window.navigator.platform.toUpperCase().indexOf("MAC") >= 0
+    ) {
         // Fix for https://github.com/mapbox/mapbox-gl-js/issues/3131:
         // Firefox (detected by InstallTrigger) on Mac determines e.button = 2 when
         // using Control + left click
@@ -135,7 +167,7 @@ DOM.mouseButton = function (e: MouseEvent) {
     return e.button;
 };
 
-DOM.remove = function(node: HTMLElement) {
+DOM.remove = function (node: HTMLElement) {
     if (node.parentNode) {
         node.parentNode.removeChild(node);
     }

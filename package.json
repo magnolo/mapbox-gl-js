@@ -1,13 +1,12 @@
 {
-  "name": "mapbox-gl",
+  "name": "@twentythreedegrees/mapbox-gl-clone",
   "description": "A WebGL interactive maps library",
-  "version": "1.13.0-dev",
+  "version": "1.13.0",
   "main": "dist/mapbox-gl.js",
-  "style": "dist/mapbox-gl.css",
   "license": "SEE LICENSE IN LICENSE.txt",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mapbox/mapbox-gl-js.git"
+    "url": "git://https://github.com/magnolo/mapbox-gl-js"
   },
   "engines": {
     "node": ">=6.4.0"
@@ -169,5 +168,16 @@
     "flow-typed/*.js",
     "src/",
     ".flowconfig"
-  ]
+  ],
+  "bugs": {
+    "url": "https://github.com/mapbox/mapbox-gl-js/issues"
+  },
+  "homepage": "https://github.com/mapbox/mapbox-gl-js#readme",
+  "directories": {
+    "test": "test"
+  },
+  "author": "",
+  "publishConfig": {
+    "access": "public"
+  }
 }
