@@ -1,4 +1,4 @@
-/* Mapbox GL JS is licensed under the 3-Clause BSD License. Full text of license: https://github.com/mapbox/mapbox-gl-js/blob/v1.13.0-dev/LICENSE.txt */
+/* Mapbox GL JS is licensed under the 3-Clause BSD License. Full text of license: https://github.com/mapbox/mapbox-gl-js/blob/v1.13.0/LICENSE.txt */
 (function (global, factory) {
 typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 typeof define === 'function' && define.amd ? define(factory) :
@@ -34,7 +34,7 @@ function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
-var version = "1.13.0-dev";
+var version = "1.13.0";
 
 var unitbezier = UnitBezier;
 function UnitBezier(p1x, p1y, p2x, p2y) {
@@ -26170,13 +26170,14 @@ DOM.suppressClick = function () {
     }, 0);
 };
 DOM.mousePos = function (el, e) {
-    var rect = el.getBoundingClientRect();
-    return new performance.Point((e.clientX - rect.left - el.clientLeft) / (el._scaleRatio || 1), (e.clientY - rect.top - el.clientTop) / (el._scaleRatio || 1));
+    var rect = el.getBoundingClientRect(), factorX = rect.width ? el.offsetWidth / rect.width : 1, factorY = rect.height ? el.offsetHeight / rect.height : 1;
+    var t = performance.window.TouchEvent && e instanceof performance.window.TouchEvent ? e.touches[0] : e;
+    return new performance.Point((t.clientX - rect.left) * factorX - el.clientLeft, (t.clientY - rect.top) * factorY - el.clientTop);
 };
 DOM.touchPos = function (el, touches) {
-    var rect = el.getBoundingClientRect(), points = [];
+    var rect = el.getBoundingClientRect(), factorX = rect.width ? el.offsetWidth / rect.width : 1, factorY = rect.height ? el.offsetHeight / rect.height : 1, points = [];
     for (var i = 0; i < touches.length; i++) {
-        points.push(new performance.Point((touches[i].clientX - rect.left - el.clientLeft) / (el._scaleRatio || 1), (touches[i].clientY - rect.top - el.clientTop) / (el._scaleRatio || 1)));
+        points.push(new performance.Point((touches[i].clientX - rect.left) * factorX - el.clientLeft, (touches[i].clientY - rect.top) * factorY - el.clientTop));
     }
     return points;
 };
